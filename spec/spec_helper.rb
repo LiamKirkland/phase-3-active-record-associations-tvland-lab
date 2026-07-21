@@ -31,9 +31,17 @@ end
 
 def migrate!(direction, version)
   migrations_paths = ActiveRecord::Migrator.migrations_paths
-  migrations = ActiveRecord::MigrationContext.new(migrations_paths, ActiveRecord::SchemaMigration).migrations
+  context = ActiveRecord::MigrationContext.new(migrations_paths)
 
   ActiveRecord::Migration.suppress_messages do
-    ActiveRecord::Migrator.new(direction, migrations, ActiveRecord::SchemaMigration, version).migrate
+    if direction == :down
+      if version == 0
+        context.migrate(0)
+      else
+        context.migrate(version)
+      end
+    elsif direction == :up
+      context.migrate(version)
+    end
   end
 end
