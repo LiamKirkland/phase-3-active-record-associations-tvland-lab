@@ -61,7 +61,8 @@ Write a migration that adds the column `catchphrase` as a string to your
 **Once you've completed all three migrations, go ahead and run `bin/rspec` to
 see what you need to do for the models.**
 
-### Model Methods
+### Model Methods  
+*Note: Many of these methods are automatically created once your ActiveRecord associations are setup. You'll know you have your schema setup correctly when running `bin/rspec` passes most of your tests*
 
 #### Character
 
@@ -122,8 +123,26 @@ see what you need to do for the models.**
 
 - `#shows`: should return a list of all the show instances associated with
   the network.
-- `#sorry`: returns a string "We're sorry about passing on John Mulaney's
-  pilot".
+- `#first_show_actors`: returns a string containing the show name, actors (full names), and their characters.
+  The formatting of the string isn't important, as long as all of the asked-for information is present.  
+    
+  For Example:
+  ```ruby
+  hbo = Network.create(channel: 300, call_letters: "HBO")
+  thrones = Show.create(name: "Game of Thrones", network: hbo)
+  peter = Actor.create(first_name: "Peter", last_name: "Dinklage")
+  tyrion = Character.create(name: "Tyrion Lannister", actor_id: peter.id, show_id: thrones.id)
+  emilia = Actor.create(first_name: "Emilia", last_name: "Clarke")
+  daenerys = Character.create(name: "Daenerys Targaryen", actor_id: emilia.id, show_id: thrones.id)
+
+  hbo.first_show_actors
+  ```
+  All of the following outputs would be accepted (and other similar variations):
+  ```ruby
+  # "Game of Thrones: Peter Dinklage as Tyrion Lannister, Emilia Clarke as Daenerys Targaryen"
+  # "Tyrion Lannister played by Peter Dinklage & Daenerys Targaryen played by Emilia Clarke in Game of Thrones"
+  # "Game of Thrones - Tyrion Lannister:Peter Dinklage Daenerys Targaryen:Emilia Clarke"
+  ```
 
 ## Resources
 
